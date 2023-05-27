@@ -6,10 +6,11 @@ Please note that the hidden sections contain detailed information about data cle
 Key Results
 -----------
 
--   We observe on obtained data an unexpected situation of increased exam results during the pandemic among schools with low socioeconomic status and a decrease in scores among schools with high socioeconomic status. The inequality between schools is reduced due to the pandemic.
+-   We observe on obtained data an unexpected situation of increased exam results during the pandemic among schools with low socioeconomic status and a decrease in scores among schools with high socioeconomic status. The inequality between schools is therefore reduced due to the pandemic.
 -   On average, across the overall sample of schools, the pandemic has a relatively weak impact on exam results in the region.
 
-#### Preparing individual exam results for the analysis
+Preparing individual exam results for the analysis
+--------------------------------------------------
 
 <details> <summary>Open this section</summary>
 
@@ -384,7 +385,8 @@ Overall, we can see that there aren't many of them, considering the total number
 
 </details>
 
-#### Descriptive analysis of individual exam results
+Descriptive analysis of individual exam results
+-----------------------------------------------
 
 <details> <summary>Open this section</summary>
 
@@ -718,16 +720,12 @@ Let's also take a look at a graph comparing the distribution of scores in readin
 
 ![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-9-1.png) For each subject separately, we observe a slight decline in the results in 2020. However, in reading, there seem to be a recovery in the results after 2020, while such a trend is absent in mathematics. It is worth noting nevertheless that these data do not yet provide evidence of a statistically significant effect of the pandemic and only visually illustrate the situation without any control variables. ![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-10-1.png)![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-10-2.png) </details>
 
-#### Preparing school data for the analysis
+Preparing school data for the analysis
+--------------------------------------
 
 <details> <summary>Open this section</summary>
 
 Let's load the database of school variables from the file. All data in the file are numerical and have been entered without any typos or other symbols. A total of 30 contextual variables have been recorded for schools. From these variables, we need to select several that are substantively meaningful, consistently measured from year to year, and have relatively few missing values. To do this, let's first check the number of missing values in the database for these variables and remove those with a high number of NA.
-
-``` r
-schl_data <- read_excel("schl_dat.xlsx", na="NA")
-str(schl_data)
-```
 
     ## tibble [4,855 × 18] (S3: tbl_df/tbl/data.frame)
     ##  $ year   : num [1:4855] 2021 2021 2021 2021 2021 ...
@@ -748,10 +746,6 @@ str(schl_data)
     ##  $ ses15  : num [1:4855] 85.48 5.76 15.92 12.42 14.29 ...
     ##  $ ses16  : num [1:4855] 32 33 0 0 65 110 65 22 90 120 ...
     ##  $ ses17  : num [1:4855] 82 80 50 58 105 150 100 74 140 170 ...
-
-``` r
-summary(schl_data)
-```
 
     ##       year         schl_id            ses1             ses2        
     ##  Min.   :2017   Min.   :832002   Min.   :  0.00   Min.   :  0.000  
@@ -794,13 +788,6 @@ summary(schl_data)
     ##  Max.   :120.00   Max.   :723.0  
     ##  NA's   :3905     NA's   :3905
 
-``` r
-schl_data %>%
-  group_by(year) %>%
-  summarise(n = sum(!is.na(schl_id)),
-            across(ses1:ses17, list(miss = ~sum(is.na(.)))))
-```
-
     ## # A tibble: 5 × 18
     ##    year     n ses1_miss ses2_miss ses3_miss ses4_miss ses5_miss ses7_miss
     ##   <dbl> <int>     <int>     <int>     <int>     <int>     <int>     <int>
@@ -813,47 +800,18 @@ schl_data %>%
     ## #   ses11_miss <int>, ses12_miss <int>, ses13_miss <int>, ses14_miss <int>,
     ## #   ses15_miss <int>, ses16_miss <int>, ses17_miss <int>
 
-``` r
-schl_ses <- select(schl_data, -"ses2", -"ses5", -"ses9", -"ses14", -"ses15", -"ses16", -"ses17")
-```
-
 After considering the relatively large number of missing values for several contextual variables, which were eventually removed, the following data remains in the database:
 
 ses1: Proportion of students on the school register ses3: Proportion of students learning Russian language for less than one year ses4: Proportion of students with special needs (disabled children) ses7: Proportion of students with one/both parents unemployed ses8: Proportion of students with both parents without higher education ses10: Proportion of students from incomplete families ses11: Proportion of students from large families ses12: Proportion of students from socially vulnerable families/leading a deviant lifestyle ses13: Proportion of students from low-income families
 
 For now we will keep all this variables and create averages for schools from 2017 to 2021 (contextual variables are available only until the year 2021). These new variables will provide an overview of the average socio-economic characteristics of the student population throughout the study period.
 
-``` r
-ses_mean <- schl_ses %>%
-  group_by(schl_id) %>%
-  summarise(across(starts_with("ses"), 
-                   list(m = mean, v = var), 
-                   na.rm = TRUE))
-```
-
 Based on this data, we will identify schools with outliers in the means and variances of context variables, which suggest extreme values and significant changes in their student population over the past 5 years compared to the overall sample. These schools probably had errors in the data collection process, and we will exclude them from the analysis.
-
-``` r
-ses_mean_clean <- ses_mean %>% 
-  mutate_at(vars(starts_with("ses")), replace_outliers_with_na) %>% 
-  ungroup()
-
-library(stringr)
-ses_mean_clean <- ses_mean_clean %>%
-  mutate(across(ends_with("_m"), ~ ifelse(is.na(get(str_replace(cur_column(), "_m$", "_v"))), NA, .))) %>%
-  ungroup()
-
-sapply(ses_mean, function(x) sum(is.na(x)))
-```
 
     ## schl_id  ses1_m  ses1_v  ses3_m  ses3_v  ses4_m  ses4_v  ses7_m  ses7_v  ses8_m 
     ##       0       6      14       6      14       6      14       6      14       7 
     ##  ses8_v ses10_m ses10_v ses11_m ses11_v ses12_m ses12_v ses13_m ses13_v 
     ##      19       6      14       6      14       6      14       6      14
-
-``` r
-sapply(ses_mean_clean, function(x) sum(is.na(x)))
-```
 
     ## schl_id  ses1_m  ses1_v  ses3_m  ses3_v  ses4_m  ses4_v  ses7_m  ses7_v  ses8_m 
     ##       0     161     146     244     244     180     142     128     120     122 
@@ -862,7 +820,8 @@ sapply(ses_mean_clean, function(x) sum(is.na(x)))
 
 </details>
 
-#### Descriptive analysis of school context variables
+Descriptive analysis of school context variables
+------------------------------------------------
 
 <details> <summary>Open this section</summary>
 
@@ -872,350 +831,237 @@ Here are the conclusions that can be drawn from the descriptive statistics table
 -   Schools in the region differ significantly in terms of the proportion of students from families where both parents do not have higher education (on average 65%) and the proportion of students from low-income families (20%).
 -   There are smaller differences between schools in terms of the proportion of students with disabilities (5,4%), from unemployed families (14%), from incomplete families (22%), from large families (26%) and low-incone families (20%).
 -   The weakest indicators with low variance and close to zero mean values, are students on internal school records, students studying Russian language for less than a year, and students from socially vulnerable families. There are very few of them in the region's schools. We will exclude this variables from the database.
+    <table class="table" style="margin-left: auto; margin-right: auto;">
+    <caption>
+    Descriptive Statistics of Average School Data in 2017-2021
+    </caption>
+    <thead>
+    <tr>
+    <th style="text-align:left;">
+    Variable
+    </th>
+    <th style="text-align:left;">
+    NotNA
+    </th>
+    <th style="text-align:left;">
+    Mean
+    </th>
+    <th style="text-align:left;">
+    Sd
+    </th>
+    <th style="text-align:left;">
+    Min
+    </th>
+    <th style="text-align:left;">
+    Max
+    </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td style="text-align:left;">
+    ses1: Proportion of students on the school register
+    </td>
+    <td style="text-align:left;">
+    839
+    </td>
+    <td style="text-align:left;">
+    1.5
+    </td>
+    <td style="text-align:left;">
+    1.4
+    </td>
+    <td style="text-align:left;">
+    0
+    </td>
+    <td style="text-align:left;">
+    6.3
+    </td>
+    </tr>
+    <tr>
+    <td style="text-align:left;">
+    ses3: Proportion of students learning Russian language for less than one year
+    </td>
+    <td style="text-align:left;">
+    756
+    </td>
+    <td style="text-align:left;">
+    0
+    </td>
+    <td style="text-align:left;">
+    0
+    </td>
+    <td style="text-align:left;">
+    0
+    </td>
+    <td style="text-align:left;">
+    0
+    </td>
+    </tr>
+    <tr>
+    <td style="text-align:left;">
+    ses4: Proportion of students with special needs (disabled children)
+    </td>
+    <td style="text-align:left;">
+    820
+    </td>
+    <td style="text-align:left;">
+    5.4
+    </td>
+    <td style="text-align:left;">
+    4.3
+    </td>
+    <td style="text-align:left;">
+    0
+    </td>
+    <td style="text-align:left;">
+    21
+    </td>
+    </tr>
+    <tr>
+    <td style="text-align:left;">
+    ses7: Proportion of students with one/both parents unemployed
+    </td>
+    <td style="text-align:left;">
+    872
+    </td>
+    <td style="text-align:left;">
+    14
+    </td>
+    <td style="text-align:left;">
+    14
+    </td>
+    <td style="text-align:left;">
+    0
+    </td>
+    <td style="text-align:left;">
+    60
+    </td>
+    </tr>
+    <tr>
+    <td style="text-align:left;">
+    ses8: Proportion of students with both parents without higher education
+    </td>
+    <td style="text-align:left;">
+    878
+    </td>
+    <td style="text-align:left;">
+    65
+    </td>
+    <td style="text-align:left;">
+    31
+    </td>
+    <td style="text-align:left;">
+    0
+    </td>
+    <td style="text-align:left;">
+    100
+    </td>
+    </tr>
+    <tr>
+    <td style="text-align:left;">
+    ses10: Proportion of students from incomplete families
+    </td>
+    <td style="text-align:left;">
+    874
+    </td>
+    <td style="text-align:left;">
+    22
+    </td>
+    <td style="text-align:left;">
+    8.3
+    </td>
+    <td style="text-align:left;">
+    0
+    </td>
+    <td style="text-align:left;">
+    45
+    </td>
+    </tr>
+    <tr>
+    <td style="text-align:left;">
+    ses11: Proportion of students from large families
+    </td>
+    <td style="text-align:left;">
+    881
+    </td>
+    <td style="text-align:left;">
+    26
+    </td>
+    <td style="text-align:left;">
+    14
+    </td>
+    <td style="text-align:left;">
+    0
+    </td>
+    <td style="text-align:left;">
+    72
+    </td>
+    </tr>
+    <tr>
+    <td style="text-align:left;">
+    ses12: Proportion of students from socially vulnerable families/leading a deviant lifestyle
+    </td>
+    <td style="text-align:left;">
+    800
+    </td>
+    <td style="text-align:left;">
+    1
+    </td>
+    <td style="text-align:left;">
+    1.5
+    </td>
+    <td style="text-align:left;">
+    0
+    </td>
+    <td style="text-align:left;">
+    7.6
+    </td>
+    </tr>
+    <tr>
+    <td style="text-align:left;">
+    ses13: Proportion of students from low-income families
+    </td>
+    <td style="text-align:left;">
+    842
+    </td>
+    <td style="text-align:left;">
+    20
+    </td>
+    <td style="text-align:left;">
+    20
+    </td>
+    <td style="text-align:left;">
+    0
+    </td>
+    <td style="text-align:left;">
+    88
+    </td>
+    </tr>
+    </tbody>
+    </table>
 
-``` r
-ses_mean_clean <- select(ses_mean_clean, -ends_with("v"))
-
-library(vtable)
-ses_mean_clean %>%
-select(-schl_id) %>%
-st(out="kable", summ=c('notNA(x)','mean(x)', 'sd(x)', 'min(x)', 'max(x)'), title="Descriptive Statistics of Average School Data in 2017-2021",
-labels=c("ses1: Proportion of students on the school register",
-"ses3: Proportion of students learning Russian language for less than one year",
-"ses4: Proportion of students with special needs (disabled children)",
-"ses7: Proportion of students with one/both parents unemployed",
-"ses8: Proportion of students with both parents without higher education",
-"ses10: Proportion of students from incomplete families",
-"ses11: Proportion of students from large families",
-"ses12: Proportion of students from socially vulnerable families/leading a deviant lifestyle",
-"ses13: Proportion of students from low-income families")) %>%
-  kableExtra::kable_styling()
-```
-
-<table class="table" style="margin-left: auto; margin-right: auto;">
-<caption>
-Descriptive Statistics of Average School Data in 2017-2021
-</caption>
-<thead>
-<tr>
-<th style="text-align:left;">
-Variable
-</th>
-<th style="text-align:left;">
-NotNA
-</th>
-<th style="text-align:left;">
-Mean
-</th>
-<th style="text-align:left;">
-Sd
-</th>
-<th style="text-align:left;">
-Min
-</th>
-<th style="text-align:left;">
-Max
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-ses1: Proportion of students on the school register
-</td>
-<td style="text-align:left;">
-839
-</td>
-<td style="text-align:left;">
-1.5
-</td>
-<td style="text-align:left;">
-1.4
-</td>
-<td style="text-align:left;">
-0
-</td>
-<td style="text-align:left;">
-6.3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ses3: Proportion of students learning Russian language for less than one year
-</td>
-<td style="text-align:left;">
-756
-</td>
-<td style="text-align:left;">
-0
-</td>
-<td style="text-align:left;">
-0
-</td>
-<td style="text-align:left;">
-0
-</td>
-<td style="text-align:left;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ses4: Proportion of students with special needs (disabled children)
-</td>
-<td style="text-align:left;">
-820
-</td>
-<td style="text-align:left;">
-5.4
-</td>
-<td style="text-align:left;">
-4.3
-</td>
-<td style="text-align:left;">
-0
-</td>
-<td style="text-align:left;">
-21
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ses7: Proportion of students with one/both parents unemployed
-</td>
-<td style="text-align:left;">
-872
-</td>
-<td style="text-align:left;">
-14
-</td>
-<td style="text-align:left;">
-14
-</td>
-<td style="text-align:left;">
-0
-</td>
-<td style="text-align:left;">
-60
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ses8: Proportion of students with both parents without higher education
-</td>
-<td style="text-align:left;">
-878
-</td>
-<td style="text-align:left;">
-65
-</td>
-<td style="text-align:left;">
-31
-</td>
-<td style="text-align:left;">
-0
-</td>
-<td style="text-align:left;">
-100
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ses10: Proportion of students from incomplete families
-</td>
-<td style="text-align:left;">
-874
-</td>
-<td style="text-align:left;">
-22
-</td>
-<td style="text-align:left;">
-8.3
-</td>
-<td style="text-align:left;">
-0
-</td>
-<td style="text-align:left;">
-45
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ses11: Proportion of students from large families
-</td>
-<td style="text-align:left;">
-881
-</td>
-<td style="text-align:left;">
-26
-</td>
-<td style="text-align:left;">
-14
-</td>
-<td style="text-align:left;">
-0
-</td>
-<td style="text-align:left;">
-72
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ses12: Proportion of students from socially vulnerable families/leading a deviant lifestyle
-</td>
-<td style="text-align:left;">
-800
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;">
-1.5
-</td>
-<td style="text-align:left;">
-0
-</td>
-<td style="text-align:left;">
-7.6
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ses13: Proportion of students from low-income families
-</td>
-<td style="text-align:left;">
-842
-</td>
-<td style="text-align:left;">
-20
-</td>
-<td style="text-align:left;">
-20
-</td>
-<td style="text-align:left;">
-0
-</td>
-<td style="text-align:left;">
-88
-</td>
-</tr>
-</tbody>
-</table>
 </details>
 
-#### Preparing the final database for analysis
+Preparing final database for the analysis
+-----------------------------------------
 
 <details> <summary>Open this section</summary>
 
 Now we can merge the individual student data with the school-level context characteristics. Let's examine how the remaining school-level context characteristics in the database are associated with the exam results of the students.
 
-``` r
-ses_mean_clean <- select(ses_mean_clean, -"ses1_m", -"ses3_m", -"ses12_m") 
-data_ind_level <- merge(ind_data_clean, ses_mean_clean, by = "schl_id")
-
-library(corrplot)
-```
-
-    ## corrplot 0.92 loaded
-
-``` r
-library(Hmisc)
-```
-
-    ## Loading required package: lattice
-
-    ## Warning: package 'lattice' was built under R version 4.0.2
-
-    ## Loading required package: survival
-
-    ## Loading required package: Formula
-
-    ## 
-    ## Attaching package: 'Hmisc'
-
-    ## The following objects are masked from 'package:dplyr':
-    ## 
-    ##     src, summarize
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     format.pval, units
-
-``` r
-rus <- subset(data_ind_level[, 5:11], data_ind_level$subject == "rus")
-corr_r <- cor(rus, use = "pairwise.complete.obs", method="pearson")
-testRes = rcorr(as.matrix(rus))
-corrplot(corr_r, p.mat = testRes$p, method = "ellipse",
-         addCoef.col = "black",
-         number.cex = 0.75, sig.level = 0.05,
-         tl.col = "black", title="Reading")
-```
-
-![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-15-1.png)
-
-``` r
-math <- subset(data_ind_level[, 5:11], data_ind_level$subject == "math")
-corr_m <- cor(math, use = "pairwise.complete.obs", method="pearson")
-testRes <- rcorr(as.matrix(math))
-corrplot(corr_m, p.mat = testRes$p, method = "ellipse",
-         addCoef.col = "black", sig.level = 0.05,
-         number.cex = 0.75,
-         tl.col = "black", title="Mathematics")
-```
-
-![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-15-2.png) Based on the plot, the strongest correlation (and it's negative) with exam results shows the proportion of students from families where both parents do not have a higher education. Besides, this variable is strongly correlated with other student population characteristics. According to theory and our previous research findings, this specific variable is the most meaningful and substantively relevant. Therefore, in the future models, we will include only this one variable as a control characteristic of schools context.
+![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-15-1.png)![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-15-2.png) Based on the plot, the strongest correlation (and it's negative) with exam results shows the proportion of students from families where both parents do not have a higher education. Besides, this variable is strongly correlated with other student population characteristics. According to theory and our previous research findings, this specific variable is the most meaningful and substantively relevant. Therefore, in the future models, we will include only this one variable as a control characteristic of schools context.
 
 </details>
 
-#### The impact of the COVID-19 pandemic on exam results
+The impact of the COVID-19 pandemic on exam results
+---------------------------------------------------
 
 To answer the main research question - how the COVID-19 pandemic has affected the quality of the Unified State Exam (USE) results in the region - I will employ multilevel regression modeling. The models will account for a three-level structure of the data, with students at the first level, the year of examination at the second level, and schools at the third level. At the school level, one contextual characteristic will be controlled as a proxy for socioeconomic status (SES): the proportion of children from families where both parents lack higher education averaged for the period from 2017 to 2021.
 
 For each subject, two regression models will be constructed. The first model will estimate the differences in results between the years of study for the entire sample, without assuming a differential effect of the pandemic. In the second model, the interaction variable will be included, and the differences in results between the years will be estimated for schools with different levels of contextual variable. The random intercept and fixed slope model is used, demonstrating the best fit to the data.
 
-``` r
-library(sjstats)
-library(sjPlot)
-library(dplyr)
-
-ses_mean_clean <- mutate(ses_mean_clean, ses8_std = scale(ses8_m))
-data_ind_level <- inner_join(data_ind_level, ses_mean_clean %>% 
-                                 select(schl_id, ses8_std), by = "schl_id")
-data_ind_level <- data_ind_level  %>% 
-  group_by(year, subject) %>%
-  mutate(score_std = scale(score))
-data_ind_level$year_f <- relevel(as.factor(data_ind_level$year), ref="2020")
-
-library(lme4)
-```
-
-    ## Warning: package 'lme4' was built under R version 4.0.2
-
-    ## Loading required package: Matrix
-
-    ## 
-    ## Attaching package: 'Matrix'
-
-    ## The following objects are masked from 'package:tidyr':
-    ## 
-    ##     expand, pack, unpack
-
-``` r
-library(ggeffects)
-library(ggplot2)
-
-rus_mod1 <- lmer(score_std ~ 1 + year_f + ses8_std + (1 | schl_id/year), data = data_ind_level, subset = subject == "rus")
-rus_mod2 <- lmer(score_std ~ 1 + year_f*ses8_std + (1 | schl_id/year), data = data_ind_level, subset = subject == "rus")
-
-math_mod1 <- lmer(score_std ~ 1 + year_f + ses8_std + (1 | schl_id/year), data = data_ind_level, subset = subject == "math")
-math_mod2 <- lmer(score_std ~ 1 + year_f*ses8_std + (1 | schl_id/year), data = data_ind_level, subset = subject == "math")
-```
-
 In the models below, exam results for different years are compared to the reference year of 2020, when students were required to learn remotely for part of the academic year. The data obtained reveals interesting patterns. When considering the overall sample without the interaction variable, the exam results for all years are nearly identical. Although there is a statistically significant increase in math scores after the pandemic, the effect size is so small that it is difficult to argue for a real improvement compared to previous years. In other words, on average, the exam results in the region did not change due to the COVID-19 pandemic.
-
-``` r
-tab_model(rus_mod1, rus_mod2, math_mod1, math_mod2, dv.labels = c("Reading", "Reading (with interaction)", "Mathematics", "Mathematics (with interaction)"), show.aic = TRUE, show.aicc = TRUE, show.loglik = TRUE)
-```
 
 <table style="border-collapse:collapse; border:none;">
 <tr>
@@ -1926,29 +1772,7 @@ log-Likelihood
 </table>
 However, when the interaction variable is included in the model, significant differences emerge in how exam scores changed in 2020 among different groups of schools. To ease the interpretation of these models, we will refer to the visualization of predicted values.
 
-``` r
-rus_pl <- ggpredict(rus_mod2, c("year_f", "ses8_std"))
-plot(rus_pl, ci = TRUE, connect.lines = TRUE)+
-  labs(title = "Predicted scores for reading in schools with different SES", color="SES", x="Year", y="Exam score")+
-  scale_colour_brewer(palette = "Set1" , labels = c("High-SES", "Middle-SES", "Low-SES"))
-```
-
-    ## Scale for 'colour' is already present. Adding another scale for 'colour',
-    ## which will replace the existing scale.
-
-![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-18-1.png)
-
-``` r
-math_pl <- ggpredict(math_mod2, c("year_f", "ses8_std"))
-plot(math_pl, ci = TRUE, connect.lines = TRUE)+
-  labs(title = "Predicted scores for mathematics in schools with different SES", color="SES", x="Year", y="Exam score")+
-  scale_colour_brewer(palette = "Set1" , labels = c("High-SES", "Middle-SES", "Low-SES"))
-```
-
-    ## Scale for 'colour' is already present. Adding another scale for 'colour',
-    ## which will replace the existing scale.
-
-![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-18-2.png)
+![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-18-1.png)![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-18-2.png)
 
 Surprisingly, in 2020, the most affluent schools (with low proportion of children from families without higher education) experienced a considerable decline in exam scores compared to previous years, while schools with low socioeconomic status demonstrated an increase. These findings suggest that the pandemic had a varying impact on schools based on their socioeconomic conditions.
 
