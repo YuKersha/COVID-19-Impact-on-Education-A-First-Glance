@@ -1772,7 +1772,15 @@ log-Likelihood
 </table>
 However, when the interaction variable is included in the model, significant differences emerge in how exam scores changed in 2020 among different groups of schools. To ease the interpretation of these models, we will refer to the visualization of predicted values.
 
-![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-18-1.png)![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-18-2.png)
+    ## Scale for 'colour' is already present. Adding another scale for 'colour',
+    ## which will replace the existing scale.
+
+![Predicted scores for reading in schools with different SES](covid-19-exam_files/figure-markdown_github/unnamed-chunk-18-1.png)
+
+    ## Scale for 'colour' is already present. Adding another scale for 'colour',
+    ## which will replace the existing scale.
+
+![Predicted scores for mathematics in schools with different SES](covid-19-exam_files/figure-markdown_github/unnamed-chunk-19-1.png)
 
 Surprisingly, in 2020, the most affluent schools (with low proportion of children from families without higher education) experienced a considerable decline in exam scores compared to previous years, while schools with low socioeconomic status demonstrated an increase. These findings suggest that the pandemic had a varying impact on schools based on their socioeconomic conditions.
 
