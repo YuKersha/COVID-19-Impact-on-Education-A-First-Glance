@@ -6,15 +6,15 @@ Please note that the hidden sections contain detailed information about data cle
 Key Results
 -----------
 
--   We observe on obtained data an unexpected situation of increased exam results during the pandemic among schools with low socioeconomic status and a decrease in scores among schools with high socioeconomic status. The inequality between schools is therefore reduced due to the pandemic.
--   On average, across the overall sample of schools, the pandemic has a relatively weak impact on exam results in the region.
+-   The data reveals an unexpected pattern where exam results during the pandemic show an increase among schools with low socioeconomic status, while scores decline among schools with high socioeconomic status. As a result, the disparity between schools is reduced due to the pandemic.
+-   On the entire sample of schools, the pandemic's influence on exam results in the region is relatively small, with only a weak average impact observed.
 
 Preparing individual exam results for the analysis
 --------------------------------------------------
 
 <details> <summary>Open this section</summary>
 
-The data type is numeric, and there are no typos or unnecessary characters in the database. There are missing data points for some subjects, but it is not a problem. There are no duplicate records for students in the database.
+The data type is numeric, and there are no typos or unnecessary characters in the database. There are missing data points for some subjects, but it is not a problem due to the number of observations in the database. There are no duplicate records for students in the data.
 
     ## tibble [148,423 × 5] (S3: tbl_df/tbl/data.frame)
     ##  $ year   : num [1:148423] 2022 2022 2022 2022 2022 ...
@@ -29,7 +29,7 @@ The data type is numeric, and there are no typos or unnecessary characters in th
     ##    year schl_id stud_id     rus    math 
     ##  148417  147455       0  148382  148389
 
-To compare exams across different years, we will convert the scores into a percentage of exam completion. This means dividing all values by the maximum score possible for the exam in the particular year. The step is necessary, because the maximum scores vary from year to year.
+To compare exam scores across different years, we will transform the scores by converting them into a percentage of completion. This involves dividing all score values by the maximum possible score for the exam in each specific year. This step is necessary as the maximum scores vary from year to year.
 
     ##   year rus math
     ## 1 2017  39   32
@@ -39,9 +39,8 @@ To compare exams across different years, we will convert the scores into a perce
     ## 5 2021  33   31
     ## 6 2022  33   31
 
-    ## Warning: package 'dplyr' was built under R version 4.0.2
+Let's now examine the descriptive statistics. We observe that certain exams have a zero percent completion rate, which is suspicious and may indicate the presence of outliers in the data. This is particularly concerning for the reading exam, where achievements are typically quite high.
 
-Let's examine the descriptive statistics. We observe that there is a zero percent completion rate for certain exams. This is suspicious and could indicate the presence of outliers in the data. It is particularly concerning when it comes to the reading exam, where achievements are typically quite high.
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -363,11 +362,11 @@ math
 </tr>
 </tbody>
 </table>
-Let's also examine box plots, which can help identify suspicious values in the data. We observe the presence of such values. In reading, despite high average scores, there are suspiciously low values for the exam completion percentage. In mathematics, there are both unusually low and high scores.
+We should also examine box plot graphs as they can reveal any outliers or suspicious values in the data. Upon inspection, we indeed observe the existence of such values. In the reading subject, despite the presence of high average scores, we notice a number of unusually low values for the exam completion percentage. Similarly, in mathematics, we encounter both exceptionally low and high scores.
 
 ![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-5-1.png)![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-5-2.png)
 
-Now let's use the formal Tukey's method to determine the number of outliers for each subject in each year.
+To remove outliers from the dataset, we utilize the formal Tukey's method to determine the number of outliers for each subject in each year.
 
     ## # A tibble: 2 × 3
     ##   subject      n outliers
@@ -390,7 +389,7 @@ Descriptive analysis of individual exam results
 
 <details> <summary>Open this section</summary>
 
-Now let's conduct an initial exploratory data analysis using the percentage of exam completion (0-100) as an indicator of subject achievement, based on data without outliers. We will examine the descriptive statistics by year and subject. From the results, it can be observed that the averages for reading and mathematics decrease after 2019.
+Next, we will conduct an initial exploratory data analysis using the percentage of exam completion (ranging from 0 to 100) as an indicator of subject achievement, based on the dataset without outliers. We will examine the descriptive statistics by year and subject. The analysis reveals a decrease in average scores for reading and mathematics after 2019.
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
@@ -713,19 +712,21 @@ math
 </tr>
 </tbody>
 </table>
-Let's also take a look at a graph comparing the distribution of scores in reading and mathematics over a period of 6 years.
+Next, let's analyze a graph that illustrates the distribution of scores in reading and mathematics across a 6-year period.
 
--   Reading test consistently demontsrates the highest scores regardless of the year of the exam. It is the easiest exam, with a distribution heavily skewed to the left - meaning that more than half of the students score above the average.
--   In mathematics, the average percentage of exam completion is generally lower than in reading. The distribution is slightly skewed to the right in the last years. All of this is indicating that the exam is more challenging than the reading exam.
+-   The reading test consistently demonstrates the highest scores regardless of the exam year. This suggests that it is the easiest exam, with a distribution that is heavily skewed to the left. In other words, a significant portion of students tend to score above the average in reading.
+-   In mathematics, the average percentage of exam completion is generally lower than in reading. The distribution is slightly skewed to the right in the last years. These findings indicate that the mathematics exam is relatively more challenging compared to the reading exam.
 
-![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-9-1.png) For each subject separately, we observe a slight decline in the results in 2020. However, in reading, there seem to be a recovery in the results after 2020, while such a trend is absent in mathematics. It is worth noting nevertheless that these data do not yet provide evidence of a statistically significant effect of the pandemic and only visually illustrate the situation without any control variables. ![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-10-1.png)![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-10-2.png) </details>
+![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-9-1.png) For each subject separately, we observe a slight decline in the results in 2020. However, in reading, there seem to be a recovery in the results after 2020, while such a trend is absent in mathematics. It is worth noting nevertheless that these data do not yet provide evidence of a statistically significant effect of the pandemic and only visually illustrate the situation without any control variables.
+
+![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-10-1.png)![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-10-2.png) </details>
 
 Preparing school data for the analysis
 --------------------------------------
 
 <details> <summary>Open this section</summary>
 
-Let's load the database of school variables from the file. All data in the file are numerical and have been entered without any typos or other symbols. A total of 30 contextual variables have been recorded for schools. From these variables, we need to select several that are substantively meaningful, consistently measured from year to year, and have relatively few missing values. To do this, let's first check the number of missing values in the database for these variables and remove those with a high number of NA.
+In this section we will load the school database from the file and work with it. The data in the file are in numeric format and have been accurately entered without any typos or extraneous symbols. The database contains 17 contextual variables for schools. We need to select a subset of variables that are conceptually meaningful, consistently measured across years, and have relatively few missing values. To begin this process, we will examine the number of missing values in the database for these variables and exclude those with a high number of missing values.
 
     ## tibble [4,855 × 19] (S3: tbl_df/tbl/data.frame)
     ##  $ year   : num [1:4855] 2021 2021 2021 2021 2021 ...
@@ -803,7 +804,15 @@ Let's load the database of school variables from the file. All data in the file 
 
 After considering the relatively large number of missing values for several contextual variables, which were eventually removed, the following data remains in the database:
 
-ses1: Proportion of students on the school register ses3: Proportion of students learning Russian language for less than one year ses4: Proportion of students with special needs (disabled children) ses7: Proportion of students with one/both parents unemployed ses8: Proportion of students with both parents without higher education ses10: Proportion of students from incomplete families ses11: Proportion of students from large families ses12: Proportion of students from socially vulnerable families/leading a deviant lifestyle ses13: Proportion of students from low-income families
+-   ses1: Proportion of students on the school register
+-   ses3: Proportion of students learning Russian language for less than one year
+-   ses4: Proportion of students with special needs (disabled children)
+-   ses7: Proportion of students with one/both parents unemployed
+-   ses8: Proportion of students with both parents without higher education
+-   ses10: Proportion of students from incomplete families
+-   ses11: Proportion of students from large families
+-   ses12: Proportion of students from socially vulnerable families/leading a deviant lifestyle
+-   ses13: Proportion of students from low-income families
 
 For now we will keep all this variables and create averages for schools from 2017 to 2021 (contextual variables are available only until the year 2021). These new variables will provide an overview of the average socio-economic characteristics of the student population throughout the study period.
 
@@ -831,217 +840,217 @@ Here are the conclusions that can be drawn from the descriptive statistics table
 -   Even after removing data from several schools, there is still sufficient information in the database.
 -   Schools in the region differ significantly in terms of the proportion of students from families where both parents do not have higher education (on average 65%) and the proportion of students from low-income families (20%).
 -   There are smaller differences between schools in terms of the proportion of students with disabilities (5,4%), from unemployed families (14%), from incomplete families (22%), from large families (26%) and low-incone families (20%).
--   The weakest indicators with low variance and close to zero mean values, are students on internal school records, students studying Russian language for less than a year, and students from socially vulnerable families. There are very few of them in the region's schools. We will exclude this variables from the database.
-    <table class="table" style="margin-left: auto; margin-right: auto;">
-    <caption>
-    Descriptive Statistics of Average School Data in 2017-2021
-    </caption>
-    <thead>
-    <tr>
-    <th style="text-align:left;">
-    Variable
-    </th>
-    <th style="text-align:left;">
-    NotNA
-    </th>
-    <th style="text-align:left;">
-    Mean
-    </th>
-    <th style="text-align:left;">
-    Sd
-    </th>
-    <th style="text-align:left;">
-    Min
-    </th>
-    <th style="text-align:left;">
-    Max
-    </th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-    <td style="text-align:left;">
-    ses1: Proportion of students on the school register
-    </td>
-    <td style="text-align:left;">
-    839
-    </td>
-    <td style="text-align:left;">
-    1.5
-    </td>
-    <td style="text-align:left;">
-    1.4
-    </td>
-    <td style="text-align:left;">
-    0
-    </td>
-    <td style="text-align:left;">
-    6.3
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:left;">
-    ses3: Proportion of students learning Russian language for less than one year
-    </td>
-    <td style="text-align:left;">
-    756
-    </td>
-    <td style="text-align:left;">
-    0
-    </td>
-    <td style="text-align:left;">
-    0
-    </td>
-    <td style="text-align:left;">
-    0
-    </td>
-    <td style="text-align:left;">
-    0
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:left;">
-    ses4: Proportion of students with special needs (disabled children)
-    </td>
-    <td style="text-align:left;">
-    820
-    </td>
-    <td style="text-align:left;">
-    5.4
-    </td>
-    <td style="text-align:left;">
-    4.3
-    </td>
-    <td style="text-align:left;">
-    0
-    </td>
-    <td style="text-align:left;">
-    21
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:left;">
-    ses7: Proportion of students with one/both parents unemployed
-    </td>
-    <td style="text-align:left;">
-    872
-    </td>
-    <td style="text-align:left;">
-    14
-    </td>
-    <td style="text-align:left;">
-    14
-    </td>
-    <td style="text-align:left;">
-    0
-    </td>
-    <td style="text-align:left;">
-    60
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:left;">
-    ses8: Proportion of students with both parents without higher education
-    </td>
-    <td style="text-align:left;">
-    878
-    </td>
-    <td style="text-align:left;">
-    65
-    </td>
-    <td style="text-align:left;">
-    31
-    </td>
-    <td style="text-align:left;">
-    0
-    </td>
-    <td style="text-align:left;">
-    100
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:left;">
-    ses10: Proportion of students from incomplete families
-    </td>
-    <td style="text-align:left;">
-    874
-    </td>
-    <td style="text-align:left;">
-    22
-    </td>
-    <td style="text-align:left;">
-    8.3
-    </td>
-    <td style="text-align:left;">
-    0
-    </td>
-    <td style="text-align:left;">
-    45
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:left;">
-    ses11: Proportion of students from large families
-    </td>
-    <td style="text-align:left;">
-    881
-    </td>
-    <td style="text-align:left;">
-    26
-    </td>
-    <td style="text-align:left;">
-    14
-    </td>
-    <td style="text-align:left;">
-    0
-    </td>
-    <td style="text-align:left;">
-    72
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:left;">
-    ses12: Proportion of students from socially vulnerable families/leading a deviant lifestyle
-    </td>
-    <td style="text-align:left;">
-    800
-    </td>
-    <td style="text-align:left;">
-    1
-    </td>
-    <td style="text-align:left;">
-    1.5
-    </td>
-    <td style="text-align:left;">
-    0
-    </td>
-    <td style="text-align:left;">
-    7.6
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:left;">
-    ses13: Proportion of students from low-income families
-    </td>
-    <td style="text-align:left;">
-    842
-    </td>
-    <td style="text-align:left;">
-    20
-    </td>
-    <td style="text-align:left;">
-    20
-    </td>
-    <td style="text-align:left;">
-    0
-    </td>
-    <td style="text-align:left;">
-    88
-    </td>
-    </tr>
-    </tbody>
-    </table>
+-   The weakest indicators with low variance and close to zero mean values, are students on internal school records (1,5%), students studying Russian language for less than a year (0%), and students from socially vulnerable families (1%). There are very few of them in the region's schools. We will exclude this variables from the database.
 
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Descriptive Statistics of Average School Data in 2017-2021
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Variable
+</th>
+<th style="text-align:left;">
+NotNA
+</th>
+<th style="text-align:left;">
+Mean
+</th>
+<th style="text-align:left;">
+Sd
+</th>
+<th style="text-align:left;">
+Min
+</th>
+<th style="text-align:left;">
+Max
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+ses1: Proportion of students on the school register
+</td>
+<td style="text-align:left;">
+839
+</td>
+<td style="text-align:left;">
+1.5
+</td>
+<td style="text-align:left;">
+1.4
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+6.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ses3: Proportion of students learning Russian language for less than one year
+</td>
+<td style="text-align:left;">
+756
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ses4: Proportion of students with special needs (disabled children)
+</td>
+<td style="text-align:left;">
+820
+</td>
+<td style="text-align:left;">
+5.4
+</td>
+<td style="text-align:left;">
+4.3
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+21
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ses7: Proportion of students with one/both parents unemployed
+</td>
+<td style="text-align:left;">
+872
+</td>
+<td style="text-align:left;">
+14
+</td>
+<td style="text-align:left;">
+14
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+60
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ses8: Proportion of students with both parents without higher education
+</td>
+<td style="text-align:left;">
+878
+</td>
+<td style="text-align:left;">
+65
+</td>
+<td style="text-align:left;">
+31
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ses10: Proportion of students from incomplete families
+</td>
+<td style="text-align:left;">
+874
+</td>
+<td style="text-align:left;">
+22
+</td>
+<td style="text-align:left;">
+8.3
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+45
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ses11: Proportion of students from large families
+</td>
+<td style="text-align:left;">
+881
+</td>
+<td style="text-align:left;">
+26
+</td>
+<td style="text-align:left;">
+14
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+72
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ses12: Proportion of students from socially vulnerable families/leading a deviant lifestyle
+</td>
+<td style="text-align:left;">
+800
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1.5
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+7.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ses13: Proportion of students from low-income families
+</td>
+<td style="text-align:left;">
+842
+</td>
+<td style="text-align:left;">
+20
+</td>
+<td style="text-align:left;">
+20
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+88
+</td>
+</tr>
+</tbody>
+</table>
 </details>
 
 Preparing final database for the analysis
@@ -1051,7 +1060,7 @@ Preparing final database for the analysis
 
 Now we can merge the individual student data with the school-level context characteristics. Let's examine how the remaining school-level context characteristics in the database are associated with the exam results of the students.
 
-![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-15-1.png)![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-15-2.png) Based on the plot, the strongest correlation (and it's negative) with exam results shows the proportion of students from families where both parents do not have a higher education. Besides, this variable is strongly correlated with other student population characteristics. According to theory and our previous research findings, this specific variable is the most meaningful and substantively relevant. Therefore, in the future models, we will include only this one variable as a control characteristic of schools context.
+![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-15-1.png)![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-15-2.png) Based on the plot, the strongest correlation (and it's negative) with exam results shows the proportion of students from families where both parents do not have a higher education. Besides, this variable is strongly correlated with other student population characteristics. According to theory and our previous research findings, this specific variable is the most meaningful and substantively relevant. Therefore, in the future models, we will include only this one variable as a control characteristic of school context.
 
 </details>
 
@@ -1074,12 +1083,6 @@ Reading
 </th>
 <th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
 Reading (with interaction)
-</th>
-<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
-Mathematics
-</th>
-<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
-Mathematics (with interaction)
 </th>
 </tr>
 <tr>
@@ -1771,7 +1774,423 @@ log-Likelihood
 </td>
 </tr>
 </table>
-However, when the interaction variable is included in the model, significant differences emerge in how exam scores changed in 2020 among different groups of schools. To ease the interpretation of these models, we will refer to the visualization of predicted values.
+<table style="border-collapse:collapse; border:none;">
+<tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
+ 
+</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+Mathematics
+</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+Mathematics (with interaction)
+</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
+Predictors
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Estimates
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+CI
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+p
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Estimates
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+CI
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  col7">
+p
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+(Intercept)
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.26
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.29 – -0.22
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>&lt;0.001</strong>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.22
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.26 – -0.18
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
+<strong>&lt;0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+year f \[2017\]
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.02
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.05 – 0.02
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.274
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.07
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.11 – -0.03
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
+<strong>0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+year f \[2018\]
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.02
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.02 – 0.05
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.385
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.02
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.06 – 0.01
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
+0.216
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+year f \[2019\]
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.00
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.04 – 0.03
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.927
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.06
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.10 – -0.02
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
+<strong>0.004</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+year f \[2021\]
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.04
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.00 – 0.07
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>0.026</strong>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.02
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.02 – 0.06
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
+0.241
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+year f \[2022\]
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.05
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.02 – 0.08
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>0.005</strong>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.04
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.00 – 0.08
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
+0.054
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+ses8 std
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.25
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.27 – -0.23
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>&lt;0.001</strong>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.20
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.23 – -0.16
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
+<strong>&lt;0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+year f \[2017\] × ses8 std
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.10
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.13 – -0.06
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
+<strong>&lt;0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+year f \[2018\] × ses8 std
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.07
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.10 – -0.03
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
+<strong>&lt;0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+year f \[2019\] × ses8 std
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.11
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.14 – -0.08
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
+<strong>&lt;0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+year f \[2021\] × ses8 std
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.01
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.05 – 0.02
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
+0.493
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+year f \[2022\] × ses8 std
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.00
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.03 – 0.04
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
+0.913
+</td>
+</tr>
+<tr>
+<td colspan="7" style="font-weight:bold; text-align:left; padding-top:.8em;">
+Random Effects
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+σ<sup>2</sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.77
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.77
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+τ<sub>00</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.05 <sub>year:schl\_id</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.05 <sub>year:schl\_id</sub>
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.09 <sub>schl\_id</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.09 <sub>schl\_id</sub>
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+ICC
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.15
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.15
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+N
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+6 <sub>year</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+6 <sub>year</sub>
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+841 <sub>schl\_id</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+841 <sub>schl\_id</sub>
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
+Observations
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
+128914
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
+128914
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.053 / 0.199
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.054 / 0.199
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+AIC
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+337646.496
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+337595.724
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+AICc
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+337646.497
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+337595.727
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+log-Likelihood
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+-168813.248
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+-168782.862
+</td>
+</tr>
+</table>
+However, when the interaction variable is included in the model, significant differences appear in how exam scores changed in 2020 among different groups of schools. To ease the interpretation of these models, we will refer to the visualization of the models' predicted values.
 
 ![Predicted scores for reading in schools with different SES](covid-19-exam_files/figure-markdown_github/unnamed-chunk-18-1.png)
 
