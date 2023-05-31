@@ -1188,6 +1188,8 @@ ses13: Proportion of students from low-income families
 </tr>
 </tbody>
 </table>
+<br> <!-- Add an empty line here -->
+
 ``` r
 ses_mean_clean <- select(ses_mean_clean, -"ses1_m", -"ses3_m", -"ses12_m") 
 ```
@@ -1216,7 +1218,7 @@ corrplot(corr_r, p.mat = testRes$p, method = "ellipse",
          tl.col = "black", title="Reading")
 ```
 
-![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-15-1.png)
+![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-16-1.png)
 
 ``` r
 math <- subset(data_ind_level[, 5:11], data_ind_level$subject == "math")
@@ -1228,7 +1230,7 @@ corrplot(corr_m, p.mat = testRes$p, method = "ellipse",
          tl.col = "black", title="Mathematics", title.cex = 0.3)
 ```
 
-![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-15-2.png) The plot shows a strong negative correlation between the proportion of students from families where both parents do not have a higher education and test results. This finding is consistent with existing research that emphasizes the strong predictive power of parental education for academic achievement and its critical role in determining socioeconomic status (SES). Therefore, this variable will serve as the primary indicator of school SES. Other variables will be included in the models as control factors, with caution taken to check for multicollinearity.
+![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-16-2.png) The plot shows a strong negative correlation between the proportion of students from families where both parents do not have a higher education and test results. This finding is consistent with existing research that emphasizes the strong predictive power of parental education for academic achievement and its critical role in determining socioeconomic status (SES). Therefore, this variable will serve as the primary indicator of school SES. Other variables will be included in the models as control factors, with caution taken to check for multicollinearity.
 
 </details>
 
@@ -1843,6 +1845,8 @@ log-Likelihood
 </td>
 </tr>
 </table>
+<br> <!-- Add an empty line here -->
+
 ``` r
 tab_model(math_mod1, math_mod2, dv.labels = c("Mathematics", "Mathematics (with interaction)"), show.aic = TRUE, show.aicc = TRUE, show.loglik = TRUE)
 ```
@@ -2387,7 +2391,7 @@ plot(rus_pl, ci = TRUE, connect.lines = TRUE)+
   scale_colour_brewer(palette = "Set1" , labels = c("High-SES", "Middle-SES", "Low-SES"))
 ```
 
-![Predicted scores for reading in schools with different SES](covid-19-exam_files/figure-markdown_github/unnamed-chunk-18-1.png)
+![Predicted scores for reading in schools with different SES](covid-19-exam_files/figure-markdown_github/unnamed-chunk-20-1.png)
 
 ``` r
 math_pl <- ggpredict(math_mod2, c("year_f", "SES_std"))
@@ -2396,7 +2400,7 @@ plot(math_pl, ci = TRUE, connect.lines = TRUE)+
   scale_colour_brewer(palette = "Set1" , labels = c("High-SES", "Middle-SES", "Low-SES"))
 ```
 
-![Predicted scores for mathematics in schools with different SES](covid-19-exam_files/figure-markdown_github/unnamed-chunk-19-1.png)
+![Predicted scores for mathematics in schools with different SES](covid-19-exam_files/figure-markdown_github/unnamed-chunk-21-1.png)
 
 Surprisingly, high-SES schools experienced a significant decline in test scores in 2020 compared to previous years, while low-SES schools showed an increase. The finding indicates that the impact of the pandemic on schools varied depending on their socioeconomic status.
 
