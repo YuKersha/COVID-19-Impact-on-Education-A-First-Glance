@@ -98,7 +98,7 @@ kable(descriptives, digits = 0, align = c("l", "c", "c", "c", "c"), col.names = 
   kable_styling(full_width = F) %>%
   pack_rows("Reading", 1, 6) %>%
   pack_rows("Math", 7, 12) %>%
-  add_header_above(c("The descriptive statistics for the results of the Unified State Exam
+  add_header_above(c("Descriptive statistics for test results
                      in the region from 2017 to 2022"=6))
 ```
 
@@ -106,7 +106,7 @@ kable(descriptives, digits = 0, align = c("l", "c", "c", "c", "c"), col.names = 
 <thead>
 <tr>
 <th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="6">
-The descriptive statistics for the results of the Unified State Exam<br> in the region from 2017 to 2022
+Descriptive statistics for test results<br> in the region from 2017 to 2022
 
 </th>
 </tr>
@@ -475,15 +475,15 @@ kable(descriptives, digits = 0, align = c("l", "c", "c", "c", "c"), col.names = 
   kable_styling(full_width = F) %>%
   pack_rows("Reading", 1, 6) %>%
   pack_rows("Mathematics", 7, 12) %>%
-  add_header_above(c("Descriptive Statistics of Unified State Exam 
-                     Results in 2017-2022"=6))
+  add_header_above(c("Descriptive statistics for test results
+                     in the region from 2017 to 2022"=6))
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="6">
-Descriptive Statistics of Unified State Exam <br> Results in 2017-2022
+Descriptive statistics for test results<br> in the region from 2017 to 2022
 
 </th>
 </tr>
@@ -764,13 +764,13 @@ Max
 Analysis of the distribution of scores in reading and mathematics over a 6-year period reveals the following:
 
 -   The reading test consistently exhibits the highest scores, indicating its relative ease. The score distribution is skewed to the left, with a significant number of students scoring above the average.
--   In mathematics, the average percentage of completion is generally lower than in reading. The score distribution is slightly skewed to the right in recent years, suggesting a greater level of difficulty compared to the reading exam.
+-   In mathematics, the average percentage of completion is generally lower than in reading. The score distribution is slightly skewed to the right in recent years, suggesting a greater level of difficulty compared to the reading test.
 
 ``` r
 ggplot(ind_data_clean, aes(x = score, fill = subject)) +
   geom_density(alpha = 0.5) +
   facet_wrap(~ year, ncol = 3) +
-  labs(title = "The distribution of exam results by subject in each year",
+  labs(title = "The distribution of test results by subject in each year",
        x = "Score")+
   scale_fill_discrete(name = "Subject", labels = c("Mathematics", "Reading"))
 ```
@@ -780,7 +780,7 @@ ggplot(ind_data_clean, aes(x = score, fill = subject)) +
 ``` r
 ggplot(ind_data_clean[ind_data_clean$subject == "rus", ], aes(x = as.factor(year), y = score)) +
   geom_boxplot(fill = "#7cb3e6", alpha=0.8) +
-  labs(title = "The distribution of exam results in reading from 2017 to 2022", x = "Year", y = "Score")
+  labs(title = "The distribution of test results in reading from 2017 to 2022", x = "Year", y = "Score")
 ```
 
 ![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-10-1.png)
@@ -788,7 +788,7 @@ ggplot(ind_data_clean[ind_data_clean$subject == "rus", ], aes(x = as.factor(year
 ``` r
 ggplot(ind_data_clean[ind_data_clean$subject == "math", ], aes(x = as.factor(year), y = score)) +
   geom_boxplot(fill = "gold1", alpha=0.5) +
-  labs(title = "The distribution of exam results in mathematics from 2017 to 2022", x = "Year", y = "Score")
+  labs(title = "The distribution of test results in mathematics from 2017 to 2022", x = "Year", y = "Score")
 ```
 
 ![](covid-19-exam_files/figure-markdown_github/unnamed-chunk-10-2.png) </details>
